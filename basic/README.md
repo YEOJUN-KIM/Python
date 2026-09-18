@@ -44,6 +44,25 @@ for i in range(len(arr)):
 
 값만 필요하면 `for value in arr`, 인덱스와 값이 모두 필요하면 `enumerate()`를 사용한다.
 
+### 🔹 반복문에서 언패킹하기
+
+각 원소의 값 개수를 알고 있다면 여러 변수로 바로 나눠 받을 수 있다. 값과 변수의 개수는 같아야 한다.
+
+```python
+queries = [[0, 3], [1, 2]]
+
+for i, j in queries:
+    print(i, j)
+```
+
+다음 코드와 같은 의미다.
+
+```python
+for query in queries:
+    i = query[0]
+    j = query[1]
+```
+
 <br>
 
 ---
@@ -99,6 +118,11 @@ answer = [value for value in arr if value != ""]
 | `text[-1]` | 마지막 문자 가져오기 |
 | `text[:n]` / `text[-n:]` | 앞에서 / 뒤에서 n글자 가져오기 |
 | `text[start:end:step]` | `step` 간격으로 슬라이싱 (슬라이싱은 콜론 사용) |
+| `text[::-1]` | 문자열 전체를 역순으로 뒤집기 |
+
+```python
+text[s:e + 1][::-1]  # 인덱스 s부터 e까지 뒤집기
+```
 
 > 관련 문제: [`문자열의 뒤의 n글자`](./programmers/기초/문자열의_뒤의_n글자.py)
 
@@ -131,20 +155,6 @@ answer = [value for value in arr if value != ""]
 | `text.replace(" ", "")` | 문자열의 모든 일반 공백 제거 |
 | `\\` / `\"` | 문자열 안에서 역슬래시(`\`) / 큰따옴표(`"`) 출력 |
 
-### 🔹 인덱스에 해당하는 문자 조합하기
-
-```python
-# 일반 for문
-answer = ""
-for idx in index_list:
-    answer += my_string[idx]
-
-# 리스트 컴프리헨션과 join()
-answer = "".join(my_string[idx] for idx in index_list)
-```
-
-> 관련 문제: [`글자 이어 붙여 문자열 만들기`](./programmers/기초/글자_이어_붙여_문자열_만들기.py)
-
 <br>
 
 ---
@@ -152,6 +162,38 @@ answer = "".join(my_string[idx] for idx in index_list)
 ## 🟦 05 · 리스트
 
 - `arr.append(value)` — 리스트 마지막에 값 추가
+- `if not answer:` — 리스트가 비어 있을 때 실행
+
+| 문법 | 용도 |
+| --- | --- |
+| `stk.append(value)` | 마지막에 값을 추가 (`push` 역할) |
+| `stk.pop()` | 마지막 값을 꺼내면서 삭제 |
+| `stk.pop(i)` | `i`번 값을 꺼내면서 삭제 |
+| `stk.remove(value)` | 처음 발견되는 `value`를 삭제 |
+
+### 🔹 리스트의 두 값 교환하기
+
+파이썬에서는 임시 변수 없이 두 위치의 값을 바로 교환할 수 있다.
+
+```python
+answer[i], answer[j] = answer[j], answer[i]
+```
+
+다음 코드와 같은 의미다.
+
+```python
+temp = answer[i]
+answer[i] = answer[j]
+answer[j] = temp
+```
+
+### 🔹 `set`으로 중복 제거하기
+
+`set()`은 중복을 제거한다. 따라서 `len(set([a, b, c]))`로 서로 다른 숫자의 개수를 알 수 있다.
+
+```python
+len(set([2, 2, 5]))  # 2
+```
 
 <br>
 
@@ -182,6 +224,16 @@ key = dict(zip(["w", "s", "d", "a"], [1, -1, 10, -10]))
 | `max(a, b)` / `min(a, b)` | 큰 값 / 작은 값 |
 | `zip(a, b)` | 두 자료에서 같은 위치의 값끼리 묶기 |
 | `list(map(int, input().split()))` | 공백으로 구분해 입력받은 값들을 정수 리스트로 변환 |
+| `any(조건들)` | 조건 중 하나라도 참이면 `True` |
+| `all(조건들)` | 모든 조건이 참이면 `True` |
+
+```python
+if not any(char in text for char in "12346789"):
+    print("금지된 문자가 하나도 없음")
+
+if all(char in "05" for char in text):
+    print("모든 문자가 0 또는 5")
+```
 
 <br>
 
@@ -249,6 +301,117 @@ my_string = my_string[:s] + overwrite_string + my_string[end:]
 | 원인 | `remove()`로 원소가 앞으로 이동하면 다음 원소를 건너뛸 수 있음 |
 | 해결 | 필요한 값만 새 리스트에 추가 |
 | 관련 문제 | [문자열 잘라서 정렬하기](./programmers/기초/문자열_잘라서_정렬하기.py) |
+
+### ❌ 06 · `not`의 결과를 변수에 저장하지 않음
+
+| 구분 | 내용 |
+| --- | --- |
+| 원인 | `not mode`는 반대 불리언 값을 계산할 뿐, 기존 `mode`를 바꾸지 않음 |
+| 해결 | `mode = not mode`처럼 계산 결과를 다시 변수에 대입 |
+| 관련 문제 | [코드 처리하기](./programmers/기초/코드_처리하기.py) |
+
+```python
+# 잘못된 방법: mode의 값은 바뀌지 않는다.
+not mode
+
+# 해결: 반대 값을 다시 저장한다.
+mode = not mode
+```
+
+### ❌ 07 · 슬라이싱 대괄호 위치 혼동
+
+| 구분 | 내용 |
+| --- | --- |
+| 원인 | `[names::5]`처럼 리스트 바깥에 대괄호를 작성함 |
+| 해결 | 슬라이싱은 `자료[시작:끝:간격]` 형태이므로 `names[::5]`로 작성 |
+| 관련 문제 | [5명씩](./programmers/기초/5명씩.py) |
+
+```python
+# 잘못된 방법
+[names::5]
+
+# 해결: names의 0, 5, 10, ...번 원소를 가져온다.
+names[::5]
+```
+
+### ❌ 08 · 연속된 `!=`로 세 값 전체를 비교
+
+| 구분 | 내용 |
+| --- | --- |
+| 원인 | `a != b != c`는 `a != b and b != c`라는 뜻이므로 `a`와 `c`는 비교하지 않음 |
+| 해결 | `a != b and a != c and b != c`로 모두 비교하거나 `len({a, b, c}) == 3` 사용 |
+| 관련 문제 | [주사위 게임 2](./programmers/기초/주사위_게임_2.py) |
+
+```python
+# a와 c가 같은 경우를 놓친다.
+a != b != c
+
+# 세 값이 모두 다른지 확인한다.
+a != b and a != c and b != c
+```
+
+### ❌ 09 · 딕셔너리 사용 방법 미숙
+
+| 구분 | 내용 |
+| --- | --- |
+| 원인 | 숫자와 딕셔너리 전체를 비교하려고 함 |
+| 해결 | `dictionary[key]` 형태로 키에 해당하는 값을 가져옴 |
+| 관련 문제 | [수 조작하기 2](./programmers/기초/수_조작하기_2.py) |
+
+```python
+command = {1: "w", -1: "s", 10: "d", -10: "a"}
+command[10]  # "d"
+```
+
+### ❌ 10 · 리스트 삭제 메서드와 인덱싱 혼동
+
+| 구분 | 내용 |
+| --- | --- |
+| 원인 | 마지막 원소를 삭제하려고 `stk.remove[-1]`을 사용함 |
+| 해결 | 마지막 원소 삭제는 `stk.pop()`, 특정 값 삭제는 `stk.remove(value)` 사용 |
+| 관련 문제 | 배열 만들기 4 |
+
+```python
+# 잘못된 방법
+stk.remove[-1]
+
+# 마지막 원소 삭제
+stk.pop()
+```
+
+### ❌ 11 · 이차원 배열을 불필요하게 두 번 반복
+
+| 구분 | 내용 |
+| --- | --- |
+| 원인 | `[s, e]` 안의 정수를 다시 `for i, j in value`로 언패킹하려 함 |
+| 결과 | `TypeError: cannot unpack non-iterable int object` 발생 |
+| 해결 | 각 내부 배열의 값이 2개라면 `for s, e in queries`로 바로 언패킹 |
+| 관련 문제 | 문자열 여러 번 뒤집기 |
+
+```python
+# 잘못된 방법
+for value in queries:
+    for s, e in value:
+        pass
+
+# 해결
+for s, e in queries:
+    pass
+```
+
+### ❌ 12 · 값만 순회한 뒤 원래 위치를 구하려 함
+
+| 구분 | 내용 |
+| --- | --- |
+| 원인 | `for value in arr[idx:]`는 원소의 값만 주므로 원래 인덱스를 바로 알 수 없음 |
+| 해결 | `enumerate(arr[idx:], start=idx)` 또는 `range(idx, len(arr))` 사용 |
+| 관련 문제 | [가까운 1 찾기](./programmers/기초/가까운_1_찾기.py) |
+
+```python
+for pos, value in enumerate(arr[idx:], start=idx):
+    if value == 1:
+        return pos
+```
 
 <br>
 
